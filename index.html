@@ -25,9 +25,6 @@
       --cor-cinza:    #f4f4f4;
       --largura-max:  1200px;
 
-      /* Imagens vindas do site original (Google Sites).
-         Para um site 100% independente, baixe cada imagem
-         e troque a URL por um arquivo local no repositório. */
       --img-hero: url('https://lh3.googleusercontent.com/sitesv/AA5AbUClSSBvT2ldewF0K6bO7MeSsKwVycKCN6MegWtSoFrg0UP9uSAQjhIl3zJYu3YBzLJ_KhBUGSxX8ZivQgeZHItt9313JG_exAL9p6xFWHAMHOmuqFtIyDpS-1d_gFi7YQflfja4C3H2bQH4UUpzH0kPD24Kqfbfm0mufPhtq1TuoHvoFN-uBbuixiYu1JLBqWjl4ClgtPg_TyZ1DDZEoYxlELrcSHV06ZZ3S0Yv=w1280');
     }
 
@@ -65,12 +62,17 @@
       text-align: center; padding: 80px 24px; color: var(--cor-branco); overflow: hidden;
       background: #1c1c1c var(--img-hero) center/cover no-repeat;
     }
-    .hero__video {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; z-index: 0; pointer-events: none;
-      opacity: 0; transition: opacity .8s ease;   /* só aparece quando o vídeo toca */
+    /* Caixa que recorta o vídeo do YouTube para cobrir todo o banner */
+    .hero__video-wrap {
+      position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
     }
-    .hero__video.is-playing { opacity: 1; }
+    .hero__video {
+      position: absolute; top: 50%; left: 50%;
+      width: 100vw; height: 56.25vw;          /* 16:9 baseado na largura */
+      min-width: 177.78vh; min-height: 100%;  /* 16:9 baseado na altura  */
+      transform: translate(-50%, -50%);
+      border: 0; pointer-events: none;
+    }
     .hero__overlay {
       content: ""; position: absolute; inset: 0; z-index: 1;
       background: linear-gradient(180deg, rgba(0,0,0,.30) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.68) 100%);
@@ -99,7 +101,6 @@
     }
     .texto-serif--indent { text-indent: 2.2em; }
 
-    /* Lista de tópicos (Educação Ambiental) */
     .lista-topicos { list-style: none; display: grid; gap: 18px; }
     .lista-topicos li {
       position: relative; padding-left: 30px; font-family: 'Times New Roman', Times, serif;
@@ -188,14 +189,19 @@
   <!-- ===================== BANNER ===================== -->
   <section class="hero">
     <!--
-      VÍDEO DE FUNDO DA CAPA
-      Aponta para o arquivo "Aviao.mp4" na raiz do repositório.
-      O poster abaixo é a imagem que aparece enquanto o vídeo carrega.
+      VÍDEO DE FUNDO DA CAPA (YouTube não listado)
+      ID do vídeo: DPRGGSdB1JY
+      Para trocar o vídeo no futuro, substitua DPRGGSdB1JY pelo ID do novo
+      vídeo NOS DOIS lugares da URL abaixo (no v= e no playlist=).
     -->
-    <video class="hero__video" autoplay muted loop playsinline preload="auto"
-           poster="https://lh3.googleusercontent.com/sitesv/AA5AbUClSSBvT2ldewF0K6bO7MeSsKwVycKCN6MegWtSoFrg0UP9uSAQjhIl3zJYu3YBzLJ_KhBUGSxX8ZivQgeZHItt9313JG_exAL9p6xFWHAMHOmuqFtIyDpS-1d_gFi7YQflfja4C3H2bQH4UUpzH0kPD24Kqfbfm0mufPhtq1TuoHvoFN-uBbuixiYu1JLBqWjl4ClgtPg_TyZ1DDZEoYxlELrcSHV06ZZ3S0Yv=w1280">
-      <source src="Aviao.mp4" type="video/mp4">
-    </video>
+    <div class="hero__video-wrap">
+      <iframe class="hero__video"
+        src="https://www.youtube-nocookie.com/embed/DPRGGSdB1JY?autoplay=1&mute=1&controls=0&loop=1&playlist=DPRGGSdB1JY&playsinline=1&modestbranding=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3"
+        title="Vídeo de fundo"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen></iframe>
+    </div>
 
     <div class="hero__overlay"></div>
     <div class="hero__content">
@@ -249,7 +255,6 @@
   <section class="secao">
     <div class="secao__inner">
       <h2 class="titulo-vermelho">Apresentações e Materiais</h2>
-      <!-- Os links abaixo apontam para "#": substitua pelos links reais do Google Drive -->
       <div class="materiais">
         <a class="material-card" href="#">
           <span class="material-card__icone">&#9658;</span>
@@ -315,21 +320,6 @@
       © Corpo de Bombeiros Militar de Mato Grosso — Projeto Sentinelas do Amanhã
     </div>
   </footer>
-
-  <script>
-    // Faz o vídeo de fundo da capa surgir apenas quando ele realmente começa a tocar.
-    // Sem o arquivo de vídeo na raiz (Aviao.mp4), a imagem de fundo continua aparecendo normalmente.
-    (function () {
-      var v = document.querySelector('.hero__video');
-      if (!v) return;
-      var revelar = function () { v.classList.add('is-playing'); };
-      v.addEventListener('playing', revelar);
-      v.addEventListener('canplay', function () {
-        var p = v.play();
-        if (p && p.catch) { p.catch(function () { /* autoplay bloqueado: mantém a imagem de fundo */ }); }
-      });
-    })();
-  </script>
 
 </body>
 </html>
